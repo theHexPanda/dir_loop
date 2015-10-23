@@ -1,0 +1,25 @@
+$def with (name)
+$code:
+    if name:
+        items = print_dir("./upload/"+name)[0]
+    else:
+        items = print_dir("./upload/")[0]
+
+$if name:
+    List of files and directories in <em>$name</em> directory. </br>
+$else:
+    List of files and directories in <em>root</em> directory. </br>
+
+<ul>
+            <li>current directory :$items[0] </li>
+            <li>sub directories :$items[1] </li>
+            <ul>
+                $for dir in items[1]:
+                   <li>path : $dir <a href="?name=$items[0][9:]$dir">Go</a></li>
+            </ul>
+            <li>files in current: </li>
+            <ul>
+                $for file in items[2]:
+                   <li>name : $file[0] | full path : $file[1] </li>
+            </ul>
+</ul>
