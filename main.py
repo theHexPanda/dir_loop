@@ -27,6 +27,12 @@ def build_array_with_dir(rootdir):
 			str += " filename is: " + filename + " <br> "
 			str += " the full name of the file is: " + os.path.join(parent,filename)  + " <br> "
                 cur_dir.append(files)
+                last_dir = parent.split("/")[-1]
+                if last_dir:
+                    parent_dir = parent.split(last_dir)[0][0:-1]
+                else:
+                    parent_dir = ""
+                cur_dir.append(parent_dir)
                 dir_tree.append(cur_dir)
 	return dir_tree
 
