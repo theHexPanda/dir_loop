@@ -1,0 +1,26 @@
+$def with (search,directory)
+$code:
+    if directory:
+        items = print_dir("./static/"+directory)[0]
+    else:
+        items = print_dir("./static/")[0]
+
+$if directory:
+    List result of search <em>$search</em> in <em>$directory</em> directory. </br>
+$else:
+    List result of search <em>$search</em> in <em>root</em> directory. </br>
+$#{$items}
+<ul>
+            <li>back to parent directory ($items[3])  <a href="?search=$items[3][9:]">Go</a></li>
+            <li>current directory :$items[0] </li>
+            <li>sub directories :$items[1] </li>
+            <ul>
+                $for dir in items[1]:
+                   <li>path : $dir <a href="?search=$items[0][9:]/$dir">Go</a></li>
+            </ul>
+            <li>files in current: </li>
+            <ul>
+                $for file in items[2]:
+                   <li>name : $file[0] | full path : $file[1] | <a href="$file[1][2:]">Download</a> </li>
+            </ul>
+</ul>
