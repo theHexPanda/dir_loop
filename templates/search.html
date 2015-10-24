@@ -6,9 +6,9 @@ $code:
         items = search_dir("./static/",search)
 
 $if directory:
-    List result of search <em>$search</em> in <em>$directory</em> directory. </br>
+    List result of search '<em>$search</em>' in '<em>$directory</em>' directory. </br>
 $else:
-    List result of search <em>$search</em> in <em>root</em> directory. </br>
+    List result of search '<em>$search</em>' in '<em>root</em>' directory. </br>
 $#{$items}
 <ul>
             <li>files: </li>
@@ -17,3 +17,4 @@ $#{$items}
                    <li>name : $file[0] | full path : $file[1] | <a href="$file[1][2:]">Download</a> </li>
             </ul>
 </ul>
+<-  <a href="/">Back to Home Page</a>

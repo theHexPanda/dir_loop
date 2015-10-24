@@ -1,26 +1,116 @@
-$def with (name)
+$def with (name,form)
 $code:
     if name:
         items = print_dir("./static/"+name)[0]
     else:
         items = print_dir("./static/")[0]
+<html>
+<head>
+<style type="text/css">
+ul.browser {padding: 0.5cm 2.5cm; }
+p.top_info {padding: 0.5cm 2.5cm; }
+form.top {padding: 0.5cm 2.5cm;}
 
+
+div.container
+{
+width:100%;
+margin:0px;
+border:1px solid gray;
+line-height:150%;
+}
+div.header
+{
+padding:0.5em;
+color:white;
+background-color:gray;
+clear:left;
+}
+div.footer
+{
+padding:0.5em;
+color:white;
+background-color:gray;
+clear:left;
+text-align:right
+}
+h1.header
+{
+padding:0;
+margin:0;
+}
+div.left
+{
+float:left;
+width:390px;
+margin:0;
+padding:1em;
+}
+div.content
+{
+margin-left:420px;
+border-left:1px solid gray;
+padding:1em;
+}
+
+
+</style>
+</head>
+
+<body>
+
+<div class="container">
+<div class="header"><h1 class="header">Doc Search System</h1></div>
+
+<div class="left">
+
+<ul>
+            <li>  <a href="/">Home Page</a></li>
+            <li>current directory : </li>
+            <ul>
+                 <li> -> $items[0]</li>
+            </ul>
+            <li>back to parent directory :</li>
+            <ul>
+			<li> ->  <a href="?name=$items[3][9:]">$items[3]</a></li>
+            </ul>
+            <li>sub directories :</li>
+            <ul>
+                $for dir in items[1]:
+                   <li ->  <a href="?name=$items[0][9:]/$dir">$dir</a></li>
+            </ul>
+</ul>
+<form  name="main" method="post"> 
+$if not form.valid: 
+    <p class="error">Invalide value. Please try again!</p>
+    $:form.render()
+    <input type="submit" />    </form>
+$else:
+    $:form.render()
+    $#<input type="submit" formtarget="_blank" />    </form>
+    <input type="submit" />    </form>
+</div>
+
+<div class="content">
+<p class="top_info">
 $if name:
     List of files and directories in <em>$name</em> directory. </br>
 $else:
     List of files and directories in <em>root</em> directory. </br>
 $#{$items}
-<ul>
-            <li>back to parent directory ($items[3])  <a href="?name=$items[3][9:]">Go</a></li>
-            <li>current directory :$items[0] </li>
-            <li>sub directories :$items[1] </li>
-            <ul>
-                $for dir in items[1]:
-                   <li>path : $dir <a href="?name=$items[0][9:]/$dir">Go</a></li>
-            </ul>
+</p>
+<ul class="browser">
             <li>files in current: </li>
             <ul>
                 $for file in items[2]:
-                   <li>name : $file[0] | full path : $file[1] | <a href="$file[1][2:]">Download</a> </li>
+                   <li> [name : $file[0] ] |  [full path : $file[1] ] | <a href="$file[1][2:]">Download</a> </li>
             </ul>
 </ul>
+</div>
+
+<div class="footer">Copyright 2015 by Hao Corp.</div>
+</div>
+
+</div>
+</body>
+</html>

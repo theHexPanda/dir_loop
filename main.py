@@ -3,6 +3,7 @@
 import web
 import os
 import os.path
+from web import form
 
 def build_array_with_dir(rootdir):
         str = ""
@@ -82,6 +83,11 @@ def search_array_with_dir(rootdir,key_word):
 render = web.template.render('templates/', globals={'print_dir':build_array_with_dir,'search_dir':search_array_with_dir})
 
 
+search_form = form.Form(
+        form.Textbox("search",
+               form.notnull))
+
+
 urls = (
     '/', 'index',
     '/search', 'search',
@@ -92,8 +98,16 @@ urls = (
 class index:
     def GET(self):
 	#name = 'Bob'    
+        form = search_form()
         i = web.input(name=None)
-	return render.index(i.name)
+	return render.index(i.name,form)
+    def POST(self): 
+        form = search_form() 
+        i = web.input(name=None)
+        if not form.validates(): 
+            return render.index(i.name,form)
+        else:
+            raise web.seeother('/search?search='+form.d.search+'&directory=') 
 
 class search:
     def GET(self):
