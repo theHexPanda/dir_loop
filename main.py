@@ -36,11 +36,55 @@ def build_array_with_dir(rootdir):
                 dir_tree.append(cur_dir)
 	return dir_tree
 
-render = web.template.render('templates/', globals={'print_dir':build_array_with_dir})
+def search_array_with_dir(rootdir,key_word):
+        str = ""
+        dir_tree = []
+        result_of_search = []
+        for parent,dirnames,filenames in os.walk(rootdir):
+                cur_dir = []
+                str += """<p>parent is: """ + parent + " </p> "
+                cur_dir.append(parent)
+                sub_dirs = []
+                for dirname in  dirnames:
+                        sub_dirs.append(dirname)
+                        str += " dirname is " + dirname + " <br> "
+
+                cur_dir.append(sub_dirs)
+
+                files = []
+                
+                for filename in filenames:
+                        s1 = filename.decode('utf-8')
+                        s2 = key_word.decode('utf-8')
+                        if s1.find(s2) < 0:
+                            continue
+ 
+                        name_matched  = 1
+                        file = []
+                        file.append(filename)
+                        file.append(os.path.join(parent,filename))
+                        files.append(file)              #
+                        str += " filename is: " + filename + " <br> "
+                        str += " the full name of the file is: " + os.path.join(parent,filename)  + " <br> "
+                        result_of_search.append(file)
+                cur_dir.append(files)
+                last_dir = parent.split("/")[-1]
+                if last_dir:
+                    parent_dir = parent.split(last_dir)[0][0:-1]
+                else:
+                    parent_dir = ""
+                cur_dir.append(parent_dir)
+                dir_tree.append(cur_dir)
+        return result_of_search
+
+
+
+render = web.template.render('templates/', globals={'print_dir':build_array_with_dir,'search_dir':search_array_with_dir})
 
 
 urls = (
     '/', 'index',
+    '/search', 'search',
     '/upload', 'upload',
     '/upload_and_store', 'upload_and_store',
 )
@@ -50,6 +94,12 @@ class index:
 	#name = 'Bob'    
         i = web.input(name=None)
 	return render.index(i.name)
+
+class search:
+    def GET(self):
+        i = web.input(search=None,directory=None)
+        return render.search(i.search,i.directory)
+
 
 class upload:
     def GET(self):
